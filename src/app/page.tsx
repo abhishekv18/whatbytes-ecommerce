@@ -19,7 +19,6 @@ function ProductCatalog() {
   const initialMaxPrice = isNaN(parsedPrice) ? 1000 : parsedPrice;
   const urlSearch = searchParams.get("search") || "";
   const selectedBrand = searchParams.get("brand") || "All";
-  const sortBy = searchParams.get("sort") || "featured";
 
   // Local state for smooth slider dragging
   const [sliderPrice, setSliderPrice] = useState(initialMaxPrice);
@@ -53,10 +52,6 @@ function ProductCatalog() {
 
   const handleBrandChange = (brand: string) => {
     updateUrlParams({ brand: brand === "All" ? null : brand });
-  };
-
-  const handleSortChange = (sort: string) => {
-    updateUrlParams({ sort: sort === "featured" ? null : sort });
   };
 
   const handleResetFilters = () => {
@@ -97,24 +92,8 @@ function ProductCatalog() {
       );
     }
 
-    // Sorting
-    switch (sortBy) {
-      case "price-asc":
-        list.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        list.sort((a, b) => b.price - a.price);
-        break;
-      case "rating":
-        list.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        // featured default order
-        break;
-    }
-
     return list;
-  }, [selectedCategory, sliderPrice, selectedBrand, urlSearch, sortBy]);
+  }, [selectedCategory, sliderPrice, selectedBrand, urlSearch]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
@@ -147,9 +126,6 @@ function ProductCatalog() {
 
         <ProductGrid
           products={filteredProducts}
-          totalResults={PRODUCTS.length}
-          sortBy={sortBy}
-          onSortChange={handleSortChange}
           onResetFilters={handleResetFilters}
         />
       </div>

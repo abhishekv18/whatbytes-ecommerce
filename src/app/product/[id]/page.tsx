@@ -3,18 +3,13 @@
 import React, { useState, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Star,
   ShoppingBag,
   ArrowLeft,
   Check,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
   Minus,
   Plus,
-  Share2,
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -29,7 +24,6 @@ interface ProductPageProps {
 
 export default function ProductDetailPage({ params }: ProductPageProps) {
   const unwrappedParams = use(params);
-  const router = useRouter();
   const { addToCart } = useCart();
 
   const product = PRODUCTS.find((p) => p.id === unwrappedParams.id);
@@ -37,7 +31,6 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs" | "reviews">("description");
-  const [isCopied, setIsCopied] = useState(false);
 
   if (!product) {
     return (
@@ -77,19 +70,6 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
-  };
-
-  const handleBuyNow = () => {
-    addToCart(product, quantity);
-    router.push("/cart");
-  };
-
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    }
   };
 
   // Find related products in the same category
@@ -185,24 +165,10 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
             <div className="lg:col-span-6 flex flex-col justify-between">
               <div>
                 {/* Brand & Category */}
-                <div className="flex items-center justify-between gap-4 mb-2">
+                <div className="mb-2">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#0b57b8] bg-blue-50 px-2.5 py-1 rounded-md">
                     {product.category}
                   </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleShare}
-                      className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-                      title="Share link"
-                    >
-                      <Share2 size={18} />
-                    </button>
-                    {isCopied && (
-                      <span className="text-xs text-emerald-600 font-semibold animate-pulse">
-                        Link copied!
-                      </span>
-                    )}
-                  </div>
                 </div>
 
                 {/* Title */}
@@ -309,36 +275,14 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                <div className="pt-2">
                   <button
                     onClick={handleAddToCart}
-                    className="w-full sm:flex-1 py-3 px-6 bg-[#0b57b8] hover:bg-[#094799] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
+                    className="w-full py-3.5 px-6 bg-[#0b57b8] hover:bg-[#094799] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] cursor-pointer"
                   >
                     <ShoppingBag size={18} />
                     <span>Add to Cart</span>
                   </button>
-                  <button
-                    onClick={handleBuyNow}
-                    className="w-full sm:flex-1 py-3 px-6 bg-slate-900 hover:bg-black text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
-                  >
-                    <span>Buy Now</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Guarantees & Badges */}
-              <div className="mt-8 pt-6 border-t border-slate-100 grid grid-cols-3 gap-2 text-center">
-                <div className="flex flex-col items-center gap-1 text-[11px] text-slate-500">
-                  <Truck size={18} className="text-[#0b57b8]" />
-                  <span>Free shipping $150+</span>
-                </div>
-                <div className="flex flex-col items-center gap-1 text-[11px] text-slate-500">
-                  <RotateCcw size={18} className="text-[#0b57b8]" />
-                  <span>30-Day Returns</span>
-                </div>
-                <div className="flex flex-col items-center gap-1 text-[11px] text-slate-500">
-                  <ShieldCheck size={18} className="text-[#0b57b8]" />
-                  <span>2-Year Warranty</span>
                 </div>
               </div>
             </div>
